@@ -9,7 +9,7 @@ factory = StemmerFactory()
 stemmer = factory.create_stemmer()
 
 # Path ke file JSON input
-INPUT_FILE = r"C:\Kuliah\Semester 4\Kecerdasan Artificial\Simple-TikTok-Post-Text-Mining\data\dataset_tiktok-comments-scraper_2025-05-25_06-21-26-775.json"
+INPUT_FILE = r"C:\Kuliah\Semester 4\Kecerdasan Artificial\Simple-TikTok-Post-Text-Mining\data\preprocessed-data\tokenization\tokenization-2025-05-25_17-20-50.json"
 
 # Path ke direktori output stemming
 OUTPUT_DIR = Path(r"C:\Kuliah\Semester 4\Kecerdasan Artificial\Simple-TikTok-Post-Text-Mining\data\preprocessed-data\stemming")
@@ -31,7 +31,7 @@ def main():
     # Proses stemming
     stemmed_comments = []
     for item in data:
-        original = item.get("text", "")
+        original = " ".join(item)
         stemmed = stemmer.stem(original)
         stemmed_comments.append(stemmed)
 
