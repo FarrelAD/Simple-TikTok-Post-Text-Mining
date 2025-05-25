@@ -1,11 +1,12 @@
 import json
 import os
+import constants
 from spellchecker import SpellChecker
 
 # Path
-input_path = r"D:\kuliah\Semester 4\AI\Python\Simple-Instagram-Post-Text-Mining\data\preprocessed-data\tokenization\tokenization-2025-05-25_17-20-50.json"
-kamus_path = r"D:\kuliah\Semester 4\AI\Python\Simple-Instagram-Post-Text-Mining\data\dictionary\custom-kamus.json"
-output_dir = r"D:\kuliah\Semester 4\AI\Python\Simple-Instagram-Post-Text-Mining\data\preprocessed-data\word-repair"
+input_path = os.path.join(constants.TOKENIZATION_OUTPUT_DIR, 'tokenization-2025-05-25_17-20-50.json')
+kamus_path = constants.DICTIONARY_PATH
+output_dir = constants.WORD_REPAIR_OUTPUT_DIR
 
 # Buat folder output kalau belum ada
 os.makedirs(output_dir, exist_ok=True)

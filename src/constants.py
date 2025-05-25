@@ -8,5 +8,7 @@ DATA_CLEANING_OUTPUT_DIR    = BASE_PATH / "data" / "preprocessed-data" / "data-c
 TOKENIZATION_OUTPUT_DIR     = BASE_PATH / "data" / "preprocessed-data" / "tokenization"
 STEMMING_OUTPUT_DIR         = BASE_PATH / "data" / "preprocessed-data" / "stemming"
 TOKENIZATION_FILE           = BASE_PATH / "data" / "preprocessed-data" / "tokenization" 
+WORD_REPAIR_OUTPUT_DIR      = BASE_PATH / "data" / "preprocessed-data" / "word-repair"
+DICTIONARY_PATH             = BASE_PATH / "data" / "dictionary" / "custom-kamus.json"
 
 TIMESTAMP                   = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
