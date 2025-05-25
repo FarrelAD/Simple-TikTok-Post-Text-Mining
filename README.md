@@ -1,18 +1,113 @@
 # Simple-TikTok-Post-Text-Mining
 
+<tiktok-banner>
+
 A simple case study for learning how to perform text mining on TikTok posts.  
 This case study uses a TikTok post discussing the Indonesian government's 50% electricity discount for June–July 2025, offered to customers using less than 1300 VA.  
 
 > Original post: https://vt.tiktok.com/ZSh32YKTB/ 
 
+<content-thumbnail>
 
-# Goals
+
+# Goals 🎯
 
 1. Analyze user sentiment from TikTok posts
 2. Summarize user comments
 
-# Result
+---
+---
 
-| Summary | Sentiment |
-| --- | --- |
-| -- | -- |
+# Result 📝
+
+- [TEST 1](#test-1)
+- [TEST 2](#test-2)
+
+
+## TEST 1
+
+**Goal:** Analyze sentiment on posts from [context or subset].
+
+<table border="1" style="width: 100%">
+  <tr>
+    <th>Model</th>
+    <td>Logistic Regression</td>
+  </tr>
+  <tr>
+    <th>Accuracy</th>
+    <td>-%</td>
+  </tr>
+  <tr>
+    <th>Observation</th>
+    <td>-</td>
+  </tr>
+</table>
+
+### Step by step
+
+1. Data pre processing
+
+    - Case folding
+    - Data cleaning
+    - Tokenization
+    - Word repair
+    - Stopword removal
+    - Stemming
+
+2. Vectorization with  Term Frequency-Inverse Document Frequency (TF-IDF)
+3. Sentiment analysis with supervised learning approach (manual labelling)
+
+### Visualization
+
+![Word Cloud Visualization from TEST 1](img/word-cloud-2025-05-26_01-39-11.png)
+<sub><p align="center">Word Cloud Visualization from TEST 1</p></sub>
+
+```mermaid
+pie title Sentiment Analysis Pie Chart
+    "Positive" : 278
+    "Negative" : 222
+```
+
+## TEST 2
+
+**Goal:** Analyze sentiment on posts from [context or subset].
+
+<table border="1" style="width: 100%">
+  <tr>
+    <th>Model</th>
+    <td>Logistic Regression</td>
+  </tr>
+  <tr>
+    <th>Accuracy</th>
+    <td>-%</td>
+  </tr>
+  <tr>
+    <th>Observation</th>
+    <td>-</td>
+  </tr>
+</table>
+
+### Step by step
+
+1. Data pre processing
+
+    - Case folding
+    - Data cleaning
+    - Tokenization
+    - Word repair
+    - Stopword removal
+    - Stemming
+
+2. Vectorization with  Term Frequency-Inverse Document Frequency (TF-IDF)
+3. Sentiment analysis with supervised learning approach (manual labelling)
+
+### Visualization
+
+![Word Cloud Visualization from TEST 1](img/word-cloud-2025-05-26_01-39-11.png)
+<sub><p align="center">Word Cloud Visualization from TEST 1</p></sub>
+
+```mermaid
+pie title Sentiment Analysis Pie Chart
+    "Positive" : 278
+    "Negative" : 222
+```
