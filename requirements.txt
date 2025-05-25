@@ -2,3 +2,5 @@ prompt_toolkit==3.0.51
 questionary==2.1.0
 wcwidth==0.2.13
 pyspellchecker==0.8.3
+Sastrawi==1.0.1
+stemmer==0.0.4

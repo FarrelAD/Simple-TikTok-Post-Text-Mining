@@ -6,7 +6,9 @@ DATASET_PATH                = BASE_PATH / "data" / "dataset_tiktok-comments-scra
 CASE_FOLDING_OUTPUT_DIR     = BASE_PATH / "data" / "preprocessed-data" / "case-folding"
 DATA_CLEANING_OUTPUT_DIR    = BASE_PATH / "data" / "preprocessed-data" / "data-cleaning"
 TOKENIZATION_OUTPUT_DIR     = BASE_PATH / "data" / "preprocessed-data" / "tokenization"
+STEMMING_OUTPUT_DIR         = BASE_PATH / "data" / "preprocessed-data" / "stemming"
+TOKENIZATION_FILE           = BASE_PATH / "data" / "preprocessed-data" / "tokenization" 
 WORD_REPAIR_OUTPUT_DIR      = BASE_PATH / "data" / "preprocessed-data" / "word-repair"
 DICTIONARY_PATH             = BASE_PATH / "data" / "dictionary" / "custom-kamus.json"
-TIMESTAMP                   = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
+TIMESTAMP                   = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
