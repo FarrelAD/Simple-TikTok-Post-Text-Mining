@@ -12,7 +12,7 @@ input_path_files = [str(f) for f in Path(TOKENIZATION_OUTPUT_DIR).iterdir() if f
 selected_file: str = questionary.select("Select tokenization file", choices=input_path_files).ask()
 
 # Path kamus dan output
-kamus_path = DICTIONARY_PATH
+kamus_path = DICTIONARY_PATH / "custom-kamus.json"
 output_dir = WORD_REPAIR_OUTPUT_DIR
 
 # Buat folder output jika belum ada

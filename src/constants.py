@@ -5,7 +5,7 @@ BASE_PATH                   = Path(__file__).parent.parent
 
 DATASET_PATH                = BASE_PATH / "data" / "dataset_tiktok-comments-scraper_2025-05-25_06-21-26-775.json"
 
-DICTIONARY_PATH             = BASE_PATH / "data" / "dictionary" / "custom-kamus.json"
+DICTIONARY_PATH             = BASE_PATH / "data" / "dictionary"
 
 CASE_FOLDING_OUTPUT_DIR     = BASE_PATH / "data" / "preprocessed-data" / "case-folding"
 DATA_CLEANING_OUTPUT_DIR    = BASE_PATH / "data" / "preprocessed-data" / "data-cleaning"
