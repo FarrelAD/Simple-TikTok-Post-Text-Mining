@@ -15,4 +15,6 @@ TOKENIZATION_FILE           = BASE_PATH / "data" / "preprocessed-data" / "tokeni
 WORD_REPAIR_OUTPUT_DIR      = BASE_PATH / "data" / "preprocessed-data" / "word-repair"
 STOPWORD_OUTPUT_DIR         = BASE_PATH / "data" / "preprocessed-data" / "stopword-removal"
 
+VECTORIZATION_OUTPUT_DIR    = BASE_PATH / "data" / "vectorization"
+
 TIMESTAMP                   = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
