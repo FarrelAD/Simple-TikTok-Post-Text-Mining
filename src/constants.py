@@ -17,4 +17,6 @@ STOPWORD_OUTPUT_DIR         = BASE_PATH / "data" / "preprocessed-data" / "stopwo
 
 VECTORIZATION_OUTPUT_DIR    = BASE_PATH / "data" / "vectorization"
 
+IMG_DIR_PATH                = BASE_PATH / "img"
+
 TIMESTAMP                   = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")

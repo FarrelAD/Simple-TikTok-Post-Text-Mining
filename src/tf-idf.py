@@ -3,9 +3,10 @@ import math
 from pathlib import Path
 from collections import defaultdict
 import questionary
+from wordcloud import WordCloud
 
-from constants import TIMESTAMP, STEMMING_OUTPUT_DIR, VECTORIZATION_OUTPUT_DIR
-from helpers.io import export_data_to_json
+from constants import TIMESTAMP, STEMMING_OUTPUT_DIR, VECTORIZATION_OUTPUT_DIR, IMG_DIR_PATH
+from helpers.io import export_data_to_json, read_json_file
 
 def compute_tf(doc: list[str]):
     tf = defaultdict(int)
@@ -36,6 +37,31 @@ def compute_tfidf(docs: list[list[str]]):
         tfidf_all.append(tfidf)
     return tfidf_all
 
+def visualize_word_cloud() -> None:
+    files = list(VECTORIZATION_OUTPUT_DIR.glob('*'))
+    
+    if not files:
+        print(f"ERROR: Can not found any files in {VECTORIZATION_OUTPUT_DIR}")
+        return
+
+    files.sort(key=lambda f: f.stat().st_mtime, reverse=True)
+    newest_file = files[0]
+    
+    tfidf_docs = read_json_file(file_path=newest_file)
+    
+    tfidf_total = defaultdict(float)
+    for doc in tfidf_docs:
+        for term, score in doc.items():
+            tfidf_total[term] += score
+    
+    wordcloud = WordCloud(width=800, height=400, background_color='white')
+    wordcloud.generate_from_frequencies(tfidf_total)
+    
+    output_file = IMG_DIR_PATH / f"word-cloud-{TIMESTAMP}.png"
+    wordcloud.to_file(output_file)
+    
+    print("Successfully to generate word cloud visualization")
+
 def main() -> None:
     stemming_files = [str(f) for f in Path(STEMMING_OUTPUT_DIR).iterdir() if f.is_file()]
 
@@ -63,6 +89,11 @@ def main() -> None:
     
     output_files = VECTORIZATION_OUTPUT_DIR / f"tf-idf-{TIMESTAMP}.json"
     export_data_to_json(data=tfidf_results, output_file=output_files)
+    
+    is_visualize_word_cloud = questionary.confirm("Do you want to visualize the importance of words in the document using a word cloud?").ask()
+    
+    if is_visualize_word_cloud:
+        visualize_word_cloud()
 
 
 if __name__ == '__main__':
