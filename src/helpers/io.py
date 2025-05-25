@@ -1,9 +1,23 @@
 import json
 from pathlib import Path
 
+
+def read_json_file(
+        file_path: Path, 
+        encoding: str = 'utf-8'
+    ) -> any:
+    if not file_path.exists():
+        print("ERROR: File not found!")
+        return []
+        
+    with open(file_path, 'r', encoding=encoding) as file:
+        data = json.load(file)
+    
+    return data
+
 def export_data_to_json(
-    data: list,
-    output_file: Path
+        data: list,
+        output_file: Path
     ) -> None:
     print("\nConvert data to JSON file")
     
