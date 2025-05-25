@@ -1,13 +1,14 @@
 # Simple-TikTok-Post-Text-Mining
 
-<tiktok-banner>
+![TikTok app banner](https://github.com/user-attachments/assets/c61d5ebf-7da9-438d-a7a1-9abb1f60bbb2)
 
 A simple case study for learning how to perform text mining on TikTok posts.  
 This case study uses a TikTok post discussing the Indonesian government's 50% electricity discount for June–July 2025, offered to customers using less than 1300 VA.  
 
 > Original post: https://vt.tiktok.com/ZSh32YKTB/ 
 
-<content-thumbnail>
+![News thumbnail](https://github.com/user-attachments/assets/3bd68a1e-1a0e-4bc5-982b-ba0ad432522f)
+
 
 
 # Goals 🎯
