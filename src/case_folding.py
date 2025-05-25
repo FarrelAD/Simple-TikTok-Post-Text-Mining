@@ -1,8 +1,5 @@
 import json
-from constant import BASE_PATH, TIMESTAMP
-
-DATASET_PATH = BASE_PATH / "data" / "dataset_tiktok-comments-scraper_2025-05-25_06-21-26-775.json"
-CASE_FOLDING_OUTPUT_DIR = BASE_PATH / "data" / "preprocessed-data"
+from constants import TIMESTAMP, DATASET_PATH, CASE_FOLDING_OUTPUT_DIR
 
 def main():
     print(f"dataset: {DATASET_PATH}")
@@ -22,14 +19,18 @@ def main():
     for i in range(len(comments)):
         comments[i] = comments[i].lower()
     
-    print("\nPreview result of case-folding (lowercasing)")
+    print("\nPreview result from case-folding (lowercasing)")
     for i in range(5):
         print(f"- {comments[i]}")
     
     print("\nConvert list of string to JSON file")
-    output_file = CASE_FOLDING_OUTPUT_DIR / f"1-case-folding-{TIMESTAMP}.json"
-    with open(output_file, 'w', encoding='utf-8') as file:
-        json.dump(comments, file, ensure_ascii=False)
-
+    output_file = CASE_FOLDING_OUTPUT_DIR / f"case-folding-{TIMESTAMP}.json"
+    
+    try:
+        with open(output_file, 'w', encoding='utf-8') as file:
+            json.dump(comments, file, ensure_ascii=False)
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+    
 if __name__ == "__main__":
     main()
