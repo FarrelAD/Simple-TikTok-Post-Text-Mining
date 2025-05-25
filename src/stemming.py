@@ -1,49 +1,45 @@
 import json
-import os
 from datetime import datetime
 from pathlib import Path
 from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
+from constants import STEMMING_OUTPUT_DIR, TOKENIZATION_OUTPUT_DIR
+import questionary
 
-# Inisialisasi stemmer
 factory = StemmerFactory()
 stemmer = factory.create_stemmer()
-
-# Path ke file JSON input
-INPUT_FILE = r"C:\Kuliah\Semester 4\Kecerdasan Artificial\Simple-TikTok-Post-Text-Mining\data\preprocessed-data\tokenization\tokenization-2025-05-25_17-20-50.json"
-
-# Path ke direktori output stemming
-OUTPUT_DIR = Path(r"C:\Kuliah\Semester 4\Kecerdasan Artificial\Simple-TikTok-Post-Text-Mining\data\preprocessed-data\stemming")
-OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-
-# Buat timestamp untuk nama file
 TIMESTAMP = datetime.now().strftime("%Y%m%d-%H%M%S")
 
 def main():
-    # Cek file input
-    if not os.path.exists(INPUT_FILE):
-        print(f"File tidak ditemukan: {INPUT_FILE}")
+    tokenization_files = [str(f) for f in Path(TOKENIZATION_OUTPUT_DIR).iterdir() if f.is_file()]
+
+    if not tokenization_files:
+        print("Tidak ada file tokenisasi di folder:", TOKENIZATION_OUTPUT_DIR)
         return
 
-    # Baca data JSON
-    with open(INPUT_FILE, "r", encoding="utf-8") as file:
+    selected_file = questionary.select(
+        "Pilih file hasil tokenisasi untuk diproses stemming:",
+        choices=tokenization_files
+    ).ask()
+
+    print(f"File terpilih: {selected_file}")
+
+    with open(selected_file, "r", encoding="utf-8") as file:
         data = json.load(file)
 
-    # Proses stemming
     stemmed_comments = []
     for item in data:
         original = " ".join(item)
         stemmed = stemmer.stem(original)
         stemmed_comments.append(stemmed)
 
-    # Preview 5 hasil pertama
     print("\nPreview result from stemming:")
     for i in range(min(5, len(stemmed_comments))):
         print(f"- {stemmed_comments[i]}")
 
-    # Simpan hasil ke file JSON
-    output_file = OUTPUT_DIR / f"stemming-{TIMESTAMP}.json"
-    print(f"\nMenyimpan hasil ke:\n{output_file}")
+    STEMMING_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    output_file = STEMMING_OUTPUT_DIR / f"stemming-{TIMESTAMP}.json"
 
+    print(f"\nMenyimpan hasil ke:\n{output_file}")
     try:
         with open(output_file, "w", encoding="utf-8") as file:
             json.dump(stemmed_comments, file, ensure_ascii=False, indent=2)
