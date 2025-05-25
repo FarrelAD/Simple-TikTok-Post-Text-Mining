@@ -1,16 +1,25 @@
 import json
 import os
-import constants
+from pathlib import Path
+import questionary
+from constants import TOKENIZATION_OUTPUT_DIR, WORD_REPAIR_OUTPUT_DIR, DICTIONARY_PATH 
 from spellchecker import SpellChecker
 
-# Path
-input_path = os.path.join(constants.TOKENIZATION_OUTPUT_DIR, 'tokenization-2025-05-25_17-20-50.json')
-kamus_path = constants.DICTIONARY_PATH
-output_dir = constants.WORD_REPAIR_OUTPUT_DIR
+# List semua file hasil tokenisasi
+input_path_files = [str(f) for f in Path(TOKENIZATION_OUTPUT_DIR).iterdir() if f.is_file()]
 
-# Buat folder output kalau belum ada
+# Pilih file
+selected_file: str = questionary.select("Select tokenization file", choices=input_path_files).ask()
+
+# Path kamus dan output
+kamus_path = DICTIONARY_PATH
+output_dir = WORD_REPAIR_OUTPUT_DIR
+
+# Buat folder output jika belum ada
 os.makedirs(output_dir, exist_ok=True)
-output_filename = os.path.basename(input_path).replace("tokenization-", "word-repair-")
+
+# Buat nama file output dari file yang dipilih
+output_filename = os.path.basename(selected_file).replace("tokenization-", "word-repair-")
 output_path = os.path.join(output_dir, output_filename)
 
 # Load custom kamus dari file JSON
@@ -21,9 +30,9 @@ with open(kamus_path, 'r', encoding='utf-8') as f:
 spell = SpellChecker(language=None)
 spell.word_frequency.load_words(custom_kamus)
 
-# Load data
-with open(input_path, 'r', encoding='utf-8') as f:
-    data = json.load(f)
+# Load data tokenisasi
+with open(selected_file, 'r', encoding='utf-8') as file:
+    data = json.load(file)
 
 # Perbaiki kata
 repaired_data = []
@@ -37,7 +46,7 @@ for kalimat in data:
             hasil.append(koreksi if koreksi else kata)
     repaired_data.append(hasil)
 
-# Simpan hasilnya
+# Simpan hasil perbaikan
 with open(output_path, 'w', encoding='utf-8') as f:
     json.dump(repaired_data, f, indent=2, ensure_ascii=False)
 
