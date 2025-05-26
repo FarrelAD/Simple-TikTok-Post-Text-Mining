@@ -54,23 +54,38 @@ def auto_labelling_with_indobert(tokens: list) -> list[dict]:
     sentiment_analysis = pipeline("sentiment-analysis", model=model, tokenizer=tokenizer, device=DEVICE)
     label_index = {'LABEL_0': 'positive', 'LABEL_1': 'neutral', 'LABEL_2': 'negative'}
     
-    result = []
+    result = {}
     for token in tokens:
         sentiment = sentiment_analysis(token)
         label = label_index[sentiment[0]['label']]
-        result.append({ token: label })
+        result[token] = label
     
     print("\nPreview labelling with indobert")
-    for i in range(20):
-        print(f"- {result[i]}")
+    for token, label in list(result.items())[:20]:
+        print(f"- {token} : {label}")
     
     output_file = DICTIONARY_PATH / f"labelled-tokens-{TIMESTAMP}.json"
     export_data_to_json(data=result, output_file=output_file)
+    
+    return result
 
 def main() -> None:
-    unique_tokens = get_unique_tokens()
+    is_generate_new_tokens = questionary.confirm("Do you want to generate new labelled tokens ?").ask()
     
-    auto_labelling_with_indobert(unique_tokens)
+    unique_tokens = get_unique_tokens()
+    if is_generate_new_tokens:
+        lexicon = auto_labelling_with_indobert(unique_tokens)
+    else:
+        lexicon_file = [str(f) for f in Path(DICTIONARY_PATH).iterdir() if f.is_file() and f.name.startswith("labelled-tokens-")]
+        
+        selected_file = questionary.select(
+            "Select the lexicon file",
+            choices=lexicon_file
+        ).ask()
+
+        print(f"Selected file: {selected_file}")
+        
+        lexicon: list[dict] = read_json_file(Path(selected_file))
 
 
 if __name__ == '__main__':
