@@ -56,7 +56,7 @@ This case study uses a TikTok post discussing the Indonesian government's 50% el
     - Stemming
 
 2. Vectorization with  Term Frequency-Inverse Document Frequency (TF-IDF)
-3. Sentiment analysis with supervised learning approach (manual labelling)
+3. Sentiment analysis with lexicon-based approach
 
 ### Visualization
 
@@ -65,8 +65,8 @@ This case study uses a TikTok post discussing the Indonesian government's 50% el
 
 ```mermaid
 pie title Sentiment Analysis Pie Chart
-    "Positive" : 278
-    "Negative" : 222
+    "Positive" : 276
+    "Negative" : 224
 ```
 
 ## TEST 2
