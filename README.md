@@ -107,7 +107,55 @@ pie title Sentiment Analysis Pie Chart
 ### Visualization
 
 ![Word Cloud Visualization from TEST 1](img/word-cloud-2025-05-26_14-01-33.png)
-<sub><p align="center">Word Cloud Visualization from TEST 1</p></sub>
+<sub><p align="center">Word Cloud Visualization from TEST 2</p></sub>
+
+```mermaid
+pie title Sentiment Analysis Pie Chart
+    "Positive" : 205
+    "Negative" : 295
+```
+
+## TEST 3
+
+**Goal:** Analyze sentiment on posts from [context or subset].
+
+<table border="1" style="width: 100%">
+  <tr>
+    <th>Sentiment analysis</th>
+    <td>Lexicon based</td>
+  </tr>
+  <tr>
+    <th>Accuracy</th>
+    <td>-%</td>
+  </tr>
+  <tr>
+    <th>Observation</th>
+    <td>-</td>
+  </tr>
+</table>
+
+### Step by step
+
+1. Data pre processing
+
+    - Case folding
+    - Data cleaning
+
+      Add remove repeadted characters process. Example: "jangannnnnn" -> "jangan", "semangattt" -> "semangat"
+    - Tokenization
+    - Word repair
+
+      Use RapidFuzz library
+    - Stopword removal
+    - Stemming
+
+2. Vectorization with  Term Frequency-Inverse Document Frequency (TF-IDF)
+3. Sentiment analysis with supervised learning approach (manual labelling)
+
+### Visualization
+
+![Word Cloud Visualization from TEST 1](img/word-cloud-2025-05-26_15-02-48.png)
+<sub><p align="center">Word Cloud Visualization from TEST 3</p></sub>
 
 ```mermaid
 pie title Sentiment Analysis Pie Chart
