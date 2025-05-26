@@ -9,6 +9,7 @@ from constants import TIMESTAMP, CASE_FOLDING_OUTPUT_DIR, DATA_CLEANING_OUTPUT_D
 URL_PATTERN = re.compile(
     r'http[s]?://(?:[a-zA-Z0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F]{2}))+'
 )
+REPEATED_CHARS = re.compile(r'(.)\1+')
 MENTION_PATTERN = re.compile(r'@\w+')
 HASHTAG_PATTERN = re.compile(r'#\w+')
 WHITESPACE_PATTERN = re.compile(r'\s+')
@@ -18,6 +19,11 @@ SINGLE_CHAR_PATTERN = re.compile(r'\b\w\b')
 
 def remove_urls(text: str) -> str:
     return URL_PATTERN.sub('', text)
+
+def remove_repeated_chars(text: str):
+    if text.isdigit():
+        return text
+    return REPEATED_CHARS.sub(r'\1', text)
 
 def remove_mentions(text: str) -> str:
     return MENTION_PATTERN.sub('', text)
@@ -36,6 +42,7 @@ def remove_single_characters(text: str) -> str:
 
 def clean_text_data(text: str) -> str:
     text = remove_urls(text)
+    text = remove_repeated_chars(text)
     text = remove_mentions(text)
     text = remove_hashtags(text)
     text = remove_extra_whitespace(text)
