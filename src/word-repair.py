@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 import questionary
 from constants import TOKENIZATION_OUTPUT_DIR, WORD_REPAIR_OUTPUT_DIR, DICTIONARY_PATH 
-from spellchecker import SpellChecker
+from rapidfuzz import process, fuzz
 
 # List semua file hasil tokenisasi
 input_path_files = [str(f) for f in Path(TOKENIZATION_OUTPUT_DIR).iterdir() if f.is_file()]
@@ -26,24 +26,32 @@ output_path = os.path.join(output_dir, output_filename)
 with open(kamus_path, 'r', encoding='utf-8') as f:
     custom_kamus = json.load(f)
 
-# Inisialisasi spellchecker
-spell = SpellChecker(language=None)
-spell.word_frequency.load_words(custom_kamus)
+# Siapkan daftar kata dari kamus
+kamus_kata = set(custom_kamus)  # gunakan set untuk pencarian cepat
 
 # Load data tokenisasi
 with open(selected_file, 'r', encoding='utf-8') as file:
     data = json.load(file)
 
-# Perbaiki kata
+# Fungsi koreksi menggunakan RapidFuzz
+# custom_kamus sekarang adalah dict, contoh: { "gw": "saya", "elo": "kamu", ... }
+
+# Jangan konversi ke set, biarkan tetap dict
+# custom_kamus = {"gue": "saya", ...} sudah dari file JSON
+
+def koreksi_kata(kata, kamus_dict):
+    return kamus_dict.get(kata, kata)
+
+# Perbaikan
 repaired_data = []
 for kalimat in data:
-    hasil = []
-    for kata in kalimat:
-        if kata in spell:
-            hasil.append(kata)
-        else:
-            koreksi = spell.correction(kata)
-            hasil.append(koreksi if koreksi else kata)
+    hasil = [koreksi_kata(kata, custom_kamus) for kata in kalimat]
+    repaired_data.append(hasil)
+
+# Proses perbaikan
+repaired_data = []
+for kalimat in data:
+    hasil = [koreksi_kata(kata, custom_kamus) for kata in kalimat]
     repaired_data.append(hasil)
 
 # Simpan hasil perbaikan
