@@ -31,8 +31,8 @@ This case study uses a TikTok post discussing the Indonesian government's 50% el
 
 <table border="1" style="width: 100%">
   <tr>
-    <th>Model</th>
-    <td>Logistic Regression</td>
+    <th>Sentiment analysis</th>
+    <td>Lexicon based</td>
   </tr>
   <tr>
     <th>Accuracy</th>
@@ -75,8 +75,8 @@ pie title Sentiment Analysis Pie Chart
 
 <table border="1" style="width: 100%">
   <tr>
-    <th>Model</th>
-    <td>Logistic Regression</td>
+    <th>Sentiment analysis</th>
+    <td>Lexicon based</td>
   </tr>
   <tr>
     <th>Accuracy</th>
@@ -96,6 +96,8 @@ pie title Sentiment Analysis Pie Chart
     - Data cleaning
     - Tokenization
     - Word repair
+
+      Changed word repair method: switched library to RapidFuzz and updated to a different custom dictionary.
     - Stopword removal
     - Stemming
 
@@ -104,11 +106,59 @@ pie title Sentiment Analysis Pie Chart
 
 ### Visualization
 
-![Word Cloud Visualization from TEST 1](img/word-cloud-2025-05-26_01-39-11.png)
-<sub><p align="center">Word Cloud Visualization from TEST 1</p></sub>
+![Word Cloud Visualization from TEST 1](img/word-cloud-2025-05-26_14-01-33.png)
+<sub><p align="center">Word Cloud Visualization from TEST 2</p></sub>
 
 ```mermaid
 pie title Sentiment Analysis Pie Chart
-    "Positive" : 278
-    "Negative" : 222
+    "Positive" : 205
+    "Negative" : 295
+```
+
+## TEST 3
+
+**Goal:** Analyze sentiment on posts from [context or subset].
+
+<table border="1" style="width: 100%">
+  <tr>
+    <th>Sentiment analysis</th>
+    <td>Lexicon based</td>
+  </tr>
+  <tr>
+    <th>Accuracy</th>
+    <td>-%</td>
+  </tr>
+  <tr>
+    <th>Observation</th>
+    <td>-</td>
+  </tr>
+</table>
+
+### Step by step
+
+1. Data pre processing
+
+    - Case folding
+    - Data cleaning
+
+      Add remove repeadted characters process. Example: "jangannnnnn" -> "jangan", "semangattt" -> "semangat"
+    - Tokenization
+    - Word repair
+
+      Use RapidFuzz library
+    - Stopword removal
+    - Stemming
+
+2. Vectorization with  Term Frequency-Inverse Document Frequency (TF-IDF)
+3. Sentiment analysis with supervised learning approach (manual labelling)
+
+### Visualization
+
+![Word Cloud Visualization from TEST 1](img/word-cloud-2025-05-26_15-02-48.png)
+<sub><p align="center">Word Cloud Visualization from TEST 3</p></sub>
+
+```mermaid
+pie title Sentiment Analysis Pie Chart
+    "Positive" : 205
+    "Negative" : 295
 ```
