@@ -69,6 +69,38 @@ def auto_labelling_with_indobert(tokens: list) -> list[dict]:
     
     return result
 
+def predict_sentiment(input_data: list[dict], lexicon: list[dict]) -> None:
+    print("\nPredicting sentiment is running")
+    
+    total_positive = 0
+    total_negative = 0
+    for comment in input_data:
+        temp_positive = 0
+        temp_negative = 0
+        for token in comment.keys():
+            if lexicon[token] == "positive":
+                temp_positive += 1
+            else:
+                temp_negative += 1
+        if temp_positive > temp_negative:
+            total_positive += 1
+        else:
+            total_negative += 1
+    
+    if total_positive > total_negative:
+        conclusion = "positive"
+    elif total_negative > total_positive:
+        conclusion = "negative"
+    else:
+        conclusion = "neutral"
+    
+    positive_percentage = (total_positive / len(input_data)) * 100
+    negative_percentage = (total_negative / len(input_data)) * 100
+    
+    print(f"\nThe result of sentiment analysis prediction is : {conclusion} with percentage:")
+    print(f"Positive: {total_positive} - {positive_percentage:.3f}%")
+    print(f"Negative: {total_negative} - {negative_percentage:.3f}%")
+
 def main() -> None:
     is_generate_new_tokens = questionary.confirm("Do you want to generate new labelled tokens ?").ask()
     
@@ -86,6 +118,19 @@ def main() -> None:
         print(f"Selected file: {selected_file}")
         
         lexicon: list[dict] = read_json_file(Path(selected_file))
+    
+    input_files = [str(f) for f in Path(VECTORIZATION_OUTPUT_DIR).iterdir() if f.is_file()]
+        
+    selected_file = questionary.select(
+        "Select the vectorization file",
+        choices=input_files
+    ).ask()
+
+    print(f"Selected file: {selected_file}")
+    
+    input_data: list[dict] = read_json_file(Path(selected_file))
+    
+    predict_sentiment(input_data=input_data, lexicon=lexicon)
 
 
 if __name__ == '__main__':
