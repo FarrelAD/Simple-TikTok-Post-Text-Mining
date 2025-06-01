@@ -48,7 +48,7 @@ def preprocessing_data() -> None:
         elif step == "Stopword removal":
             stopword()
         elif step == "Case folding":
-            case_folding()
+            case_folding(prev_process=prev_step)
         elif step == "Word repair":
             word_repair()
         elif step == "Tokenizing":
