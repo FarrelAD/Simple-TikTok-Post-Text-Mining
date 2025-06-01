@@ -3,6 +3,8 @@ from pathlib import Path
 
 BASE_PATH                   = Path(__file__).parent.parent
 
+DATA_DIR_PATH               = BASE_PATH / "data"
+
 DATASET_PATH                = BASE_PATH / "data" / "dataset_tiktok-comments-scraper_2025-05-25_06-21-26-775.json"
 
 DICTIONARY_PATH             = BASE_PATH / "data" / "dictionary"
