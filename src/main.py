@@ -50,7 +50,7 @@ def preprocessing_data() -> None:
         elif step == "Case folding":
             case_folding(prev_process=prev_step)
         elif step == "Word repair":
-            word_repair()
+            word_repair(prev_process=prev_step)
         elif step == "Tokenizing":
             tokenization(prev_process=prev_step)
         elif step == "Stemming":

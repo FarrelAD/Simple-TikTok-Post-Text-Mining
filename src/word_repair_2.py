@@ -1,38 +1,40 @@
-import json
-import os
+import pandas as pd
 from pathlib import Path
 import questionary
-from constants import TOKENIZATION_OUTPUT_DIR, WORD_REPAIR_OUTPUT_DIR, DICTIONARY_PATH 
+from constants import TIMESTAMP, TOKENIZATION_OUTPUT_DIR, WORD_REPAIR_OUTPUT_DIR, DATA_CLEANING_OUTPUT_DIR, STOPWORD_OUTPUT_DIR, STEMMING_OUTPUT_DIR, CASE_FOLDING_OUTPUT_DIR, DICTIONARY_PATH
 from rapidfuzz import process, fuzz
 
-def main() -> None:
-    # List semua file hasil tokenisasi
-    input_path_files = [str(f) for f in Path(TOKENIZATION_OUTPUT_DIR).iterdir() if f.is_file()]
-
-    # Pilih file
-    selected_file: str = questionary.select("Select tokenization file", choices=input_path_files).ask()
-
-    # Path kamus dan output
-    kamus_path = DICTIONARY_PATH / "custom-kamus.json"
-    output_dir = WORD_REPAIR_OUTPUT_DIR
-
-    # Buat folder output jika belum ada
-    os.makedirs(output_dir, exist_ok=True)
-
-    # Buat nama file output dari file yang dipilih
-    output_filename = os.path.basename(selected_file).replace("tokenization-", "word-repair-")
-    output_path = os.path.join(output_dir, output_filename)
-
-    # Load custom kamus dari file JSON
-    with open(kamus_path, 'r', encoding='utf-8') as f:
-        custom_kamus = json.load(f)
-
-    # Siapkan daftar kata dari kamus
-    kamus_kata = set(custom_kamus)  # gunakan set untuk pencarian cepat
-
-    # Load data tokenisasi
-    with open(selected_file, 'r', encoding='utf-8') as file:
-        data = json.load(file)
+def main(prev_process: str) -> None:
+    SOURCE_DIR = None
+    
+    if prev_process == "Data cleaning":
+        SOURCE_DIR = DATA_CLEANING_OUTPUT_DIR
+    elif prev_process == "Stopword removal":
+        SOURCE_DIR = STOPWORD_OUTPUT_DIR
+    elif prev_process == "Case folding":
+        SOURCE_DIR = CASE_FOLDING_OUTPUT_DIR
+    elif prev_process == "Word repair":
+        SOURCE_DIR = WORD_REPAIR_OUTPUT_DIR
+    elif prev_process == "Tokenizing":
+        SOURCE_DIR = TOKENIZATION_OUTPUT_DIR
+    elif prev_process == "Stemming":
+        SOURCE_DIR = STEMMING_OUTPUT_DIR
+    else:
+        SOURCE_DIR = None
+        
+    source_files = [str(f) for f in Path(SOURCE_DIR).iterdir() if f.is_file()]
+    
+    selected_file: str = questionary.select(f"Select {prev_process} file", choices=source_files).ask()
+    
+    print(f"Selected file: {selected_file}")
+    
+    source_df = pd.read_csv(SOURCE_DIR / selected_file)
+    
+    print("Preview top 20 data")
+    print(source_df.head(20))
+    
+    print("\nLoad dictionary")
+    dictionary_df = pd.read_csv(DICTIONARY_PATH / "custom-kamus.json")
 
     # Fungsi koreksi menggunakan RapidFuzz
     # custom_kamus sekarang adalah dict, contoh: { "gw": "saya", "elo": "kamu", ... }
@@ -40,27 +42,26 @@ def main() -> None:
     # Jangan konversi ke set, biarkan tetap dict
     # custom_kamus = {"gue": "saya", ...} sudah dari file JSON
 
-    def koreksi_kata(kata, kamus_dict):
-        return kamus_dict.get(kata, kata)
+    dictionary_dict = dict(zip(dictionary_df['informal'], dictionary_df['formal']))
 
-    # Perbaikan
-    repaired_data = []
-    for kalimat in data:
-        hasil = [koreksi_kata(kata, custom_kamus) for kata in kalimat]
-        repaired_data.append(hasil)
+    def word_correction(word: str):
+        return dictionary_dict.get(key=word, default=word)
 
-    # Proses perbaikan
-    repaired_data = []
-    for kalimat in data:
-        hasil = [koreksi_kata(kata, custom_kamus) for kata in kalimat]
-        repaired_data.append(hasil)
+    source_df['text'] = source_df['text'].apply(lambda sentence: [word_correction(word) for word in sentence])
 
-    # Simpan hasil perbaikan
-    with open(output_path, 'w', encoding='utf-8') as f:
-        json.dump(repaired_data, f, indent=2, ensure_ascii=False)
+    print(f"\nPreview result from stopword removal")
+    print(source_df.head(20))
 
-    print("✅ Perbaikan selesai.")
-    print(f"Hasil disimpan di: {output_path}")
+    
+    print("\nConverting result from pandas data frame to CSV file")
+    try:
+        output_file_name = WORD_REPAIR_OUTPUT_DIR / f"word_repair_{TIMESTAMP}.csv"
+        source_df.to_csv(output_file_name, index=False)
+        print(f"Word repair CSV file successfully exported as {output_file_name}")
+    except Exception as e:
+        print("An error occurred while saving the CSV file:", e)
+    
+    print("Word repair process is done!")
 
 if __name__ == "__main__":
-    main()
+    main(prev_process="Data cleaning")
