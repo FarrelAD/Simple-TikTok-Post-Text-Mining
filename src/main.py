@@ -54,7 +54,7 @@ def preprocessing_data() -> None:
         elif step == "Tokenizing":
             tokenization(prev_process=prev_step)
         elif step == "Stemming":
-            stemming()
+            stemming(prev_process=prev_step)
         
         prev_step = step
     
