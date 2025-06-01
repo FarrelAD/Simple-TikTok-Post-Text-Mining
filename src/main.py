@@ -52,7 +52,7 @@ def preprocessing_data() -> None:
         elif step == "Word repair":
             word_repair()
         elif step == "Tokenizing":
-            tokenization()
+            tokenization(prev_process=prev_step)
         elif step == "Stemming":
             stemming()
         
