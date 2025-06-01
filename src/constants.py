@@ -3,22 +3,27 @@ from pathlib import Path
 
 BASE_PATH                   = Path(__file__).parent.parent
 
-DATA_DIR_PATH               = BASE_PATH / "data"
+DATA_DIR                    = BASE_PATH / "data"
 
-DATASET_PATH                = BASE_PATH / "data" / "dataset_tiktok-comments-scraper_2025-05-25_06-21-26-775.json"
+DATASET_FILE_PATH           = DATA_DIR / "dataset" / "tiktok_comments_text.csv"
 
-DICTIONARY_PATH             = BASE_PATH / "data" / "dictionary"
+DICTIONARY_PATH             = DATA_DIR / "dictionary"
 
-CASE_FOLDING_OUTPUT_DIR     = BASE_PATH / "data" / "preprocessed-data" / "case-folding"
-DATA_CLEANING_OUTPUT_DIR    = BASE_PATH / "data" / "preprocessed-data" / "data-cleaning"
-TOKENIZATION_OUTPUT_DIR     = BASE_PATH / "data" / "preprocessed-data" / "tokenization"
-STEMMING_OUTPUT_DIR         = BASE_PATH / "data" / "preprocessed-data" / "stemming"
-TOKENIZATION_FILE           = BASE_PATH / "data" / "preprocessed-data" / "tokenization" 
-WORD_REPAIR_OUTPUT_DIR      = BASE_PATH / "data" / "preprocessed-data" / "word-repair"
-STOPWORD_OUTPUT_DIR         = BASE_PATH / "data" / "preprocessed-data" / "stopword-removal"
+PREPROCESSED_DATA_DIR       = DATA_DIR / "preprocessed-data"
 
-VECTORIZATION_OUTPUT_DIR    = BASE_PATH / "data" / "vectorization"
+CASE_FOLDING_OUTPUT_DIR     = PREPROCESSED_DATA_DIR / "case-folding"
+DATA_CLEANING_OUTPUT_DIR    = PREPROCESSED_DATA_DIR / "data-cleaning"
+TOKENIZATION_OUTPUT_DIR     = PREPROCESSED_DATA_DIR / "tokenization"
+STEMMING_OUTPUT_DIR         = PREPROCESSED_DATA_DIR / "stemming"
+TOKENIZATION_FILE           = PREPROCESSED_DATA_DIR / "tokenization" 
+WORD_REPAIR_OUTPUT_DIR      = PREPROCESSED_DATA_DIR / "word-repair"
+STOPWORD_OUTPUT_DIR         = PREPROCESSED_DATA_DIR / "stopword-removal"
 
-IMG_DIR_PATH                = BASE_PATH / "img"
+VECTORIZATION__DIR          = BASE_PATH / "data" / "vectorization"
+
+IMG_DIR                     = BASE_PATH / "img"
+
+
+############################
 
 TIMESTAMP                   = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")

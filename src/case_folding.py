@@ -1,36 +1,24 @@
-import json
-from constants import TIMESTAMP, DATASET_PATH, CASE_FOLDING_OUTPUT_DIR
+import pandas as pd
+from constants import TIMESTAMP, DATASET_FILE_PATH, CASE_FOLDING_OUTPUT_DIR
 
 def main():
-    print(f"dataset: {DATASET_PATH}")
-    if not DATASET_PATH.exists():
+    print(f"dataset: {DATASET_FILE_PATH}")
+    if not DATASET_FILE_PATH.exists():
         print("Dataset is not found!")
         return
     
-    with DATASET_PATH.open('r', encoding='utf-8') as file:
-        data = json.load(file)
+    dataset_df = pd.read_csv(DATASET_FILE_PATH)
     
-    comments = [item['text'] for item in data]
+    print("Preview top 20 raw data")
+    print(dataset_df.head(10))
     
-    print("Preview top 5 raw data")
-    for i in range(5):
-        print(f"- {comments[i]}")
-        
-    for i in range(len(comments)):
-        comments[i] = comments[i].lower()
+    dataset_df['text'] = dataset_df['text'].str.lower()
     
     print("\nPreview result from case-folding (lowercasing)")
-    for i in range(5):
-        print(f"- {comments[i]}")
+    print(dataset_df.head(20))
     
-    print("\nConvert list of string to JSON file")
-    output_file = CASE_FOLDING_OUTPUT_DIR / f"case-folding-{TIMESTAMP}.json"
-    
-    try:
-        with open(output_file, 'w', encoding='utf-8') as file:
-            json.dump(comments, file, ensure_ascii=False)
-    except Exception as e:
-        print(f"An unexpected error occurred: {e}")
+    output_file_name = CASE_FOLDING_OUTPUT_DIR / f"case_folding_{TIMESTAMP}.csv"
+    dataset_df.to_csv(output_file_name, index=False)
     
 if __name__ == "__main__":
     main()

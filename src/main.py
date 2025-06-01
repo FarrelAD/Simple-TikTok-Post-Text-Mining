@@ -2,7 +2,7 @@ import pandas as pd
 import os
 import questionary
 
-from constants import DATA_DIR_PATH
+from constants import DATASET_FILE_PATH
 
 from case_folding import main as case_folding
 from data_cleaning import main as data_cleaning
@@ -67,7 +67,7 @@ def sentiment_analysis() -> None:
 def main() -> None:
     print("Preview dataset")
     
-    raw_data_df = pd.read_csv(DATA_DIR_PATH / "CSV" / "tiktok_comments_text.csv")
+    raw_data_df = pd.read_csv(DATASET_FILE_PATH)
     
     print(raw_data_df.head())
     
