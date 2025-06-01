@@ -1,48 +1,68 @@
-import json
+import pandas as pd
 from pathlib import Path
-from Sastrawi.StopWordRemover.StopWordRemoverFactory import StopWordRemoverFactory
+from Sastrawi.StopWordRemover.StopWordRemoverFactory import StopWordRemoverFactory, ArrayDictionary, StopWordRemover
 import questionary
 
-from constants import TIMESTAMP, WORD_REPAIR_OUTPUT_DIR, STOPWORD_OUTPUT_DIR
-from helpers.io import export_data_to_json
+from constants import TIMESTAMP, WORD_REPAIR_OUTPUT_DIR, STOPWORD_OUTPUT_DIR, STEMMING_OUTPUT_DIR, DATA_CLEANING_OUTPUT_DIR, CASE_FOLDING_OUTPUT_DIR, TOKENIZATION_OUTPUT_DIR
 
-def main() -> None:
-    word_repair_files = [str(f) for f in Path(WORD_REPAIR_OUTPUT_DIR).iterdir() if f.is_file()]
+def main(prev_process: str) -> None:
+    SOURCE_DIR = None
     
-    selected_file: str = questionary.select("Select word repair file", choices=word_repair_files).ask()
+    if prev_process == "Data cleaning":
+        SOURCE_DIR = DATA_CLEANING_OUTPUT_DIR
+    elif prev_process == "Stopword removal":
+        SOURCE_DIR = STOPWORD_OUTPUT_DIR
+    elif prev_process == "Case folding":
+        SOURCE_DIR = CASE_FOLDING_OUTPUT_DIR
+    elif prev_process == "Word repair":
+        SOURCE_DIR = WORD_REPAIR_OUTPUT_DIR
+    elif prev_process == "Tokenizing":
+        SOURCE_DIR = TOKENIZATION_OUTPUT_DIR
+    elif prev_process == "Stemming":
+        SOURCE_DIR = STEMMING_OUTPUT_DIR
+    else:
+        SOURCE_DIR = None
+        
+    source_files = [str(f) for f in Path(SOURCE_DIR).iterdir() if f.is_file()]
+    
+    selected_file: str = questionary.select(f"Select {prev_process} file", choices=source_files).ask()
     
     print(f"Selected file: {selected_file}")
     
-    with open(selected_file, 'r', encoding='utf-8') as file:
-        data = json.load(file)
+    source_df = pd.read_csv(SOURCE_DIR / selected_file)
     
-    print("\nPreview top 5 word repair data")
-    for i in range(5):
-        print(f"- {data[i]}")
+    print("Preview top 20 data")
+    print(source_df.head(20))
     
+    print(f"\nStopword removal is starting to process")
     
-    print(f"\nData cleaning is start to process")
-    factory = StopWordRemoverFactory()
-    stopwords = set(factory.get_stop_words())
+    more_stop_words = []
     
-    cleaned_text = []
+    stop_words = StopWordRemoverFactory().get_stop_words()
+    stop_words.extend(more_stop_words)
     
-    for item in data:
-        new_list = []
-        for word in item:
-            if word not in stopwords:
-                new_list.append(word)
-        
-        cleaned_text.append(new_list)
+    new_array = ArrayDictionary(stop_words)
+    stop_words_remover_new = StopWordRemover(new_array)
+    
+    def stopword(text: str) -> str:
+        return stop_words_remover_new.remove(text)
+    
+    source_df['text'] = source_df["text"].apply(lambda x: stopword(x))
     
     
     print(f"\nPreview result from stopword removal")
-    for i in range(5):
-        print(f"- {cleaned_text[i]}")
+    print(source_df.head(20))
 
     
-    output_file = STOPWORD_OUTPUT_DIR / f"stopword-removal-{TIMESTAMP}.json"
-    export_data_to_json(data=cleaned_text, output_file=output_file)
+    print("\nConverting result from pandas data frame to CSV file")
+    try:
+        output_file_name = STOPWORD_OUTPUT_DIR / f"stopword_removal_{TIMESTAMP}.csv"
+        source_df.to_csv(output_file_name, index=False)
+        print(f"Stopword removal CSV file successfully exported as {output_file_name}")
+    except Exception as e:
+        print("An error occurred while saving the CSV file:", e)
+    
+    print("Stopword removal process is done!")
 
 if __name__ == '__main__':
-    main()
+    main(prev_process="Data cleaning")

@@ -46,7 +46,7 @@ def preprocessing_data() -> None:
         if step == "Data cleaning":
             data_cleaning(prev_process=prev_step)
         elif step == "Stopword removal":
-            stopword()
+            stopword(prev_process=prev_step)
         elif step == "Case folding":
             case_folding(prev_process=prev_step)
         elif step == "Word repair":
