@@ -1,9 +1,10 @@
 import json
+import pandas as pd
 from pathlib import Path
 import questionary
 import re
 
-from constants import TIMESTAMP, CASE_FOLDING_OUTPUT_DIR, DATA_CLEANING_OUTPUT_DIR
+from constants import TIMESTAMP, DATASET_FILE_PATH, CASE_FOLDING_OUTPUT_DIR, TOKENIZATION_OUTPUT_DIR, DATA_CLEANING_OUTPUT_DIR, STEMMING_OUTPUT_DIR, STOPWORD_OUTPUT_DIR, WORD_REPAIR_OUTPUT_DIR, VECTORIZATION_DIR
 
 
 URL_PATTERN = re.compile(
@@ -50,39 +51,49 @@ def clean_text_data(text: str) -> str:
     text = remove_single_characters(text)
     return text
 
-def main() -> None:
-    case_folding_files = [str(f) for f in Path(CASE_FOLDING_OUTPUT_DIR).iterdir() if f.is_file()]
+def main(prev_process: str) -> None:
+    SOURCE_DIR = None
     
-    selected_file: str = questionary.select("Select case folding file", choices=case_folding_files).ask()
+    if prev_process == "Data cleaning":
+        SOURCE_DIR = DATA_CLEANING_OUTPUT_DIR
+    elif prev_process == "Stopword removal":
+        SOURCE_DIR = STOPWORD_OUTPUT_DIR
+    elif prev_process == "Case folding":
+        SOURCE_DIR = CASE_FOLDING_OUTPUT_DIR
+    elif prev_process == "Word repair":
+        SOURCE_DIR = WORD_REPAIR_OUTPUT_DIR
+    elif prev_process == "Tokenizing":
+        SOURCE_DIR = TOKENIZATION_OUTPUT_DIR
+    elif prev_process == "Stemming":
+        SOURCE_DIR = STEMMING_OUTPUT_DIR
+            
+    sources_files = [str(f) for f in Path(SOURCE_DIR).iterdir() if f.is_file()]
+    
+    selected_file: str = questionary.select(f"Select {prev_process} file", choices=sources_files).ask()
     
     print(f"Selected file: {selected_file}")
     
-    with open(selected_file, 'r', encoding='utf-8') as file:
-        data = json.load(file)
+    source_df = pd.read_csv(SOURCE_DIR / selected_file)
     
-    print("\nPreview top 5 case folding data")
-    for i in range(5):
-        print(f"- {data[i]}")
+    print("\nPreview top 20 case folding data")
+    print(source_df.head(20))
     
-    print(f"\nData cleaning is start to process")
-    for i in range(len(data)):
-        data[i] = clean_text_data(data[i])
+    print("\nData cleaning is start to process")
+    source_df['text'] = source_df['text'].apply(clean_text_data)
         
-    print(f"\nPreview result from data cleaning")
-    for i in range(5):
-        print(f"- {data[i]}")
-        
-    print("\nConvert list of string to JSON file")
-    output_file = DATA_CLEANING_OUTPUT_DIR / f"data-cleaning-{TIMESTAMP}.json"
+    print("\nPreview result from data cleaning")
+    print(source_df.head(20))
     
+    print("\nConverting result from pandas data frame to CSV file")
     try:
-        with open(output_file, 'w', encoding='utf-8') as file:
-            json.dump(data, file, ensure_ascii=False)
-        print("\nList of string successfully convert to JSON file!")
+        output_file_name = DATA_CLEANING_OUTPUT_DIR / f"data_cleaning_{TIMESTAMP}.csv"
+        source_df.to_csv(output_file_name, index=False)
+        print(f"Data cleaning CSV file successfully exported as {output_file_name}")
     except Exception as e:
-        print(f"An unexpected error occurred: {e}")
+        print("An error occurred while saving the CSV file:", e)
     
+    print("Data cleaning process is done!")
 
 
 if __name__ == '__main__':
-    main()
+    main("Case folding")

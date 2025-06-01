@@ -15,11 +15,11 @@ CASE_FOLDING_OUTPUT_DIR     = PREPROCESSED_DATA_DIR / "case-folding"
 DATA_CLEANING_OUTPUT_DIR    = PREPROCESSED_DATA_DIR / "data-cleaning"
 TOKENIZATION_OUTPUT_DIR     = PREPROCESSED_DATA_DIR / "tokenization"
 STEMMING_OUTPUT_DIR         = PREPROCESSED_DATA_DIR / "stemming"
-TOKENIZATION_FILE           = PREPROCESSED_DATA_DIR / "tokenization" 
+TOKENIZATION_OUTPUT_DIR     = PREPROCESSED_DATA_DIR / "tokenization" 
 WORD_REPAIR_OUTPUT_DIR      = PREPROCESSED_DATA_DIR / "word-repair"
 STOPWORD_OUTPUT_DIR         = PREPROCESSED_DATA_DIR / "stopword-removal"
 
-VECTORIZATION__DIR          = BASE_PATH / "data" / "vectorization"
+VECTORIZATION_DIR          = BASE_PATH / "data" / "vectorization"
 
 IMG_DIR                     = BASE_PATH / "img"
 

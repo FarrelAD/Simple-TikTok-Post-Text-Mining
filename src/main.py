@@ -39,10 +39,12 @@ def preprocessing_data() -> None:
     if not is_confirm_execute_process:
         print("Preprocessing is cancelled")
         return
+    
+    prev_step = None
 
     for step in chosen_steps:
         if step == "Data cleaning":
-            data_cleaning()
+            data_cleaning(prev_process=prev_step)
         elif step == "Stopword removal":
             stopword()
         elif step == "Case folding":
@@ -53,6 +55,8 @@ def preprocessing_data() -> None:
             tokenization()
         elif step == "Stemming":
             stemming()
+        
+        prev_step = step
     
     print("=== PREPROCESSING IS DONE ===")
 
