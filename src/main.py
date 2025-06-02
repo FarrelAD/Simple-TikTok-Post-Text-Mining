@@ -8,7 +8,7 @@ from case_folding import main as case_folding
 from data_cleaning import main as data_cleaning
 from stopword import main as stopword
 from stemming import main as stemming
-from word_repair_2 import main as word_repair
+from word_repair import main as word_repair
 from tokenization import main as tokenization
 
 from tf_idf import main as tf_idf
@@ -84,12 +84,13 @@ def main() -> None:
     
     raw_data_df = pd.read_csv(DATASET_FILE_PATH)
     
-    print(raw_data_df.head())
+    print(raw_data_df.head(20))
+    print("\n")
     
-    selected_menu = ""
+    selected_menu = "" 
     
     while selected_menu != "4. EXIT":
-        selected_menu = questionary.select("\nSelect menu", choices=[
+        selected_menu = questionary.select("Select menu", choices=[
             "1. Preprocessing data",
             "2. Vectorization",
             "3. Sentiment analysis",
