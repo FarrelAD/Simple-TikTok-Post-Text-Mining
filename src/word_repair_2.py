@@ -1,10 +1,13 @@
 import pandas as pd
 from pathlib import Path
+import re
 import questionary
-from constants import TIMESTAMP, TOKENIZATION_OUTPUT_DIR, WORD_REPAIR_OUTPUT_DIR, DATA_CLEANING_OUTPUT_DIR, STOPWORD_OUTPUT_DIR, STEMMING_OUTPUT_DIR, CASE_FOLDING_OUTPUT_DIR, DICTIONARY_PATH
+from constants import TIMESTAMP, DATASET_FILE_PATH, TOKENIZATION_OUTPUT_DIR, WORD_REPAIR_OUTPUT_DIR, DATA_CLEANING_OUTPUT_DIR, STOPWORD_OUTPUT_DIR, STEMMING_OUTPUT_DIR, CASE_FOLDING_OUTPUT_DIR, DICTIONARY_PATH
 from rapidfuzz import process, fuzz
 
-def main(prev_process: str) -> None:
+def main(prev_process: str = None) -> None:
+    print("\nWord repair is starting")
+    
     SOURCE_DIR = None
     
     if prev_process == "Data cleaning":
@@ -20,21 +23,25 @@ def main(prev_process: str) -> None:
     elif prev_process == "Stemming":
         SOURCE_DIR = STEMMING_OUTPUT_DIR
     else:
-        SOURCE_DIR = None
+        SOURCE_DIR = DATASET_FILE_PATH
+    
+    if SOURCE_DIR != DATASET_FILE_PATH:
+        source_files = [str(f) for f in Path(SOURCE_DIR).iterdir() if f.is_file()]
         
-    source_files = [str(f) for f in Path(SOURCE_DIR).iterdir() if f.is_file()]
+        selected_file: str = questionary.select(f"Select {prev_process} file", choices=source_files).ask()
+        
+        print(f"Selected file: {selected_file}")
+        source_df = pd.read_csv(SOURCE_DIR / selected_file)
+    else:
+        selected_file = DATASET_FILE_PATH
+        source_df = pd.read_csv(selected_file)
     
-    selected_file: str = questionary.select(f"Select {prev_process} file", choices=source_files).ask()
-    
-    print(f"Selected file: {selected_file}")
-    
-    source_df = pd.read_csv(SOURCE_DIR / selected_file)
     
     print("Preview top 20 data")
     print(source_df.head(20))
     
     print("\nLoad dictionary")
-    dictionary_df = pd.read_csv(DICTIONARY_PATH / "custom-kamus.json")
+    dictionary_df = pd.read_csv(DICTIONARY_PATH / "custom_dictionary.csv")
 
     # Fungsi koreksi menggunakan RapidFuzz
     # custom_kamus sekarang adalah dict, contoh: { "gw": "saya", "elo": "kamu", ... }
@@ -43,11 +50,14 @@ def main(prev_process: str) -> None:
     # custom_kamus = {"gue": "saya", ...} sudah dari file JSON
 
     dictionary_dict = dict(zip(dictionary_df['informal'], dictionary_df['formal']))
+    
+    pattern = re.compile(r'\b(' + '|'.join(map(re.escape, dictionary_dict.keys())) + r')\b')
 
-    def word_correction(word: str):
-        return dictionary_dict.get(key=word, default=word)
+    # def word_correction(word: str):
+    #     return dictionary_dict.get(key=word, default=word)
 
-    source_df['text'] = source_df['text'].apply(lambda sentence: [word_correction(word) for word in sentence])
+    # source_df['text'] = source_df['text'].apply(lambda sentence: [word_correction(word) for word in sentence])
+    source_df['text'] = source_df['text'].str.replace(pattern, lambda m: dictionary_dict[m.group(0)], regex=True)
 
     print(f"\nPreview result from stopword removal")
     print(source_df.head(20))
