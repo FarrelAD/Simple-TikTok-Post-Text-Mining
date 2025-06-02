@@ -1,36 +1,53 @@
-import json
-from constants import TIMESTAMP, DATASET_PATH, CASE_FOLDING_OUTPUT_DIR
+import pandas as pd
+import questionary
+from pathlib import Path
 
-def main():
-    print(f"dataset: {DATASET_PATH}")
-    if not DATASET_PATH.exists():
-        print("Dataset is not found!")
-        return
+from constants import TIMESTAMP, DATASET_FILE_PATH, CASE_FOLDING_OUTPUT_DIR, DATA_CLEANING_OUTPUT_DIR, STOPWORD_OUTPUT_DIR, WORD_REPAIR_OUTPUT_DIR, TOKENIZATION_OUTPUT_DIR, STEMMING_OUTPUT_DIR
+
+def main(prev_process: str):
+    SOURCE_DIR = None
     
-    with DATASET_PATH.open('r', encoding='utf-8') as file:
-        data = json.load(file)
-    
-    comments = [item['text'] for item in data]
-    
-    print("Preview top 5 raw data")
-    for i in range(5):
-        print(f"- {comments[i]}")
+    if prev_process == "Data cleaning":
+        SOURCE_DIR = DATA_CLEANING_OUTPUT_DIR
+    elif prev_process == "Stopword removal":
+        SOURCE_DIR = STOPWORD_OUTPUT_DIR
+    elif prev_process == "Case folding":
+        SOURCE_DIR = CASE_FOLDING_OUTPUT_DIR
+    elif prev_process == "Word repair":
+        SOURCE_DIR = WORD_REPAIR_OUTPUT_DIR
+    elif prev_process == "Tokenizing":
+        SOURCE_DIR = TOKENIZATION_OUTPUT_DIR
+    elif prev_process == "Stemming":
+        SOURCE_DIR = STEMMING_OUTPUT_DIR
+    else:
+        SOURCE_DIR = None
         
-    for i in range(len(comments)):
-        comments[i] = comments[i].lower()
+    
+    sources_files = [str(f) for f in Path(SOURCE_DIR).iterdir() if f.is_file()]
+    
+    selected_file: str = questionary.select(f"Select {prev_process} file", choices=sources_files).ask()
+    
+    print(f"Selected file: {selected_file}")
+    
+    source_df = pd.read_csv(SOURCE_DIR / selected_file)
+    
+    print("Preview top 20 data")
+    print(source_df.head(10))
+    
+    source_df['text'] = source_df['text'].str.lower()
     
     print("\nPreview result from case-folding (lowercasing)")
-    for i in range(5):
-        print(f"- {comments[i]}")
+    print(source_df.head(20))
     
-    print("\nConvert list of string to JSON file")
-    output_file = CASE_FOLDING_OUTPUT_DIR / f"case-folding-{TIMESTAMP}.json"
-    
+    print("\nConverting result from pandas data frame to CSV file")
     try:
-        with open(output_file, 'w', encoding='utf-8') as file:
-            json.dump(comments, file, ensure_ascii=False)
+        output_file_name = CASE_FOLDING_OUTPUT_DIR / f"case_folding_{TIMESTAMP}.csv"
+        source_df.to_csv(output_file_name, index=False)
+        print(f"Case folding CSV file successfully exported as {output_file_name}")
     except Exception as e:
-        print(f"An unexpected error occurred: {e}")
+        print("An error occurred while saving the CSV file:", e)
+    
+    print("Case folding process is done!")
     
 if __name__ == "__main__":
     main()

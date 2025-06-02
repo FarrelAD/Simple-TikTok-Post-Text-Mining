@@ -1,41 +1,54 @@
-import json
 from pathlib import Path
+import pandas as pd
 import questionary
 
-from constants import TIMESTAMP, DATA_CLEANING_OUTPUT_DIR, TOKENIZATION_OUTPUT_DIR
+from constants import TIMESTAMP, DATASET_FILE_PATH, DATA_CLEANING_OUTPUT_DIR, TOKENIZATION_OUTPUT_DIR, CASE_FOLDING_OUTPUT_DIR, STEMMING_OUTPUT_DIR, STOPWORD_OUTPUT_DIR, WORD_REPAIR_OUTPUT_DIR
 
-def main() -> None:
-    data_cleaning_files = [str(f) for f in Path(DATA_CLEANING_OUTPUT_DIR).iterdir() if f.is_file()]
+def main(prev_process: str) -> None:
+    SOURCE_DIR = None
     
-    selected_file: str = questionary.select("Select data cleaning file", choices=data_cleaning_files).ask()
+    if prev_process == "Data cleaning":
+        SOURCE_DIR = DATA_CLEANING_OUTPUT_DIR
+    elif prev_process == "Stopword removal":
+        SOURCE_DIR = STOPWORD_OUTPUT_DIR
+    elif prev_process == "Case folding":
+        SOURCE_DIR = CASE_FOLDING_OUTPUT_DIR
+    elif prev_process == "Word repair":
+        SOURCE_DIR = WORD_REPAIR_OUTPUT_DIR
+    elif prev_process == "Tokenizing":
+        SOURCE_DIR = TOKENIZATION_OUTPUT_DIR
+    elif prev_process == "Stemming":
+        SOURCE_DIR = STEMMING_OUTPUT_DIR
+    else:
+        SOURCE_DIR = DATASET_FILE_PATH
+        
+    source_files = [str(f) for f in Path(SOURCE_DIR).iterdir() if f.is_file()]
+    
+    selected_file: str = questionary.select(f"Select {prev_process.casefold()} file", choices=source_files).ask()
     
     print(f"Selected file: {selected_file}")
     
-    with open(selected_file, 'r', encoding='utf-8') as file:
-        data = json.load(file)
+    source_df = pd.read_csv(SOURCE_DIR / selected_file)
+    
+    print("\nPreview top 20 tokenization data")
+    print(source_df.head(20))
+    
+    print("\nTokenization is start to process")
+    source_df['text'] = source_df['text'].apply(lambda x: x.split())
         
-    print("\nPreview top 5 case folding data")
-    for i in range(5):
-        print(f"- {data[i]}")
+    print("\nPreview result from tokenization")
+    print(source_df.head(20))
     
-    print(f"\nTokenization is start to process")
-    for i in range(len(data)):
-        data[i] = data[i].split()
-    
-    print(f"\nPreview result from tokenization")
-    for i in range(5):
-        print(f"- {data[i]}")
-    
-    print("\nConvert list of string to JSON file")
-    output_file = TOKENIZATION_OUTPUT_DIR / f"tokenization-{TIMESTAMP}.json"
-    
+    print("\nConverting result from pandas data frame to CSV file")
     try:
-        with open(output_file, 'w', encoding='utf-8') as file:
-            json.dump(data, file, ensure_ascii=False)
-        print("\nList of string successfully convert to JSON file!")
+        output_file_name = TOKENIZATION_OUTPUT_DIR / f"tokenization_{TIMESTAMP}.csv"
+        source_df.to_csv(output_file_name, index=False)
+        print(f"Tokenization CSV file successfully exported as {output_file_name}")
     except Exception as e:
-        print(f"An unexpected error occurred: {e}")
+        print("An error occurred while saving the CSV file:", e)
+    
+    print("Tokenization process is done!")
 
 
 if __name__ == '__main__':
-    main()
+    main(prev_process="Data cleaning")

@@ -3,20 +3,27 @@ from pathlib import Path
 
 BASE_PATH                   = Path(__file__).parent.parent
 
-DATASET_PATH                = BASE_PATH / "data" / "dataset_tiktok-comments-scraper_2025-05-25_06-21-26-775.json"
+DATA_DIR                    = BASE_PATH / "data"
 
-DICTIONARY_PATH             = BASE_PATH / "data" / "dictionary"
+DATASET_FILE_PATH           = DATA_DIR / "dataset" / "tiktok_comments_text.csv"
 
-CASE_FOLDING_OUTPUT_DIR     = BASE_PATH / "data" / "preprocessed-data" / "case-folding"
-DATA_CLEANING_OUTPUT_DIR    = BASE_PATH / "data" / "preprocessed-data" / "data-cleaning"
-TOKENIZATION_OUTPUT_DIR     = BASE_PATH / "data" / "preprocessed-data" / "tokenization"
-STEMMING_OUTPUT_DIR         = BASE_PATH / "data" / "preprocessed-data" / "stemming"
-TOKENIZATION_FILE           = BASE_PATH / "data" / "preprocessed-data" / "tokenization" 
-WORD_REPAIR_OUTPUT_DIR      = BASE_PATH / "data" / "preprocessed-data" / "word-repair"
-STOPWORD_OUTPUT_DIR         = BASE_PATH / "data" / "preprocessed-data" / "stopword-removal"
+DICTIONARY_PATH             = DATA_DIR / "dictionary"
 
-VECTORIZATION_OUTPUT_DIR    = BASE_PATH / "data" / "vectorization"
+PREPROCESSED_DATA_DIR       = DATA_DIR / "preprocessed-data"
 
-IMG_DIR_PATH                = BASE_PATH / "img"
+CASE_FOLDING_OUTPUT_DIR     = PREPROCESSED_DATA_DIR / "case-folding"
+DATA_CLEANING_OUTPUT_DIR    = PREPROCESSED_DATA_DIR / "data-cleaning"
+TOKENIZATION_OUTPUT_DIR     = PREPROCESSED_DATA_DIR / "tokenization"
+STEMMING_OUTPUT_DIR         = PREPROCESSED_DATA_DIR / "stemming"
+TOKENIZATION_OUTPUT_DIR     = PREPROCESSED_DATA_DIR / "tokenization" 
+WORD_REPAIR_OUTPUT_DIR      = PREPROCESSED_DATA_DIR / "word-repair"
+STOPWORD_OUTPUT_DIR         = PREPROCESSED_DATA_DIR / "stopword-removal"
+
+VECTORIZATION_DIR          = BASE_PATH / "data" / "vectorization"
+
+IMG_DIR                     = BASE_PATH / "img"
+
+
+############################
 
 TIMESTAMP                   = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")

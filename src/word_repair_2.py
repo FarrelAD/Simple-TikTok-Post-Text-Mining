@@ -1,9 +1,8 @@
 import pandas as pd
 from pathlib import Path
-from Sastrawi.StopWordRemover.StopWordRemoverFactory import StopWordRemoverFactory, ArrayDictionary, StopWordRemover
 import questionary
-
-from constants import TIMESTAMP, WORD_REPAIR_OUTPUT_DIR, STOPWORD_OUTPUT_DIR, STEMMING_OUTPUT_DIR, DATA_CLEANING_OUTPUT_DIR, CASE_FOLDING_OUTPUT_DIR, TOKENIZATION_OUTPUT_DIR
+from constants import TIMESTAMP, TOKENIZATION_OUTPUT_DIR, WORD_REPAIR_OUTPUT_DIR, DATA_CLEANING_OUTPUT_DIR, STOPWORD_OUTPUT_DIR, STEMMING_OUTPUT_DIR, CASE_FOLDING_OUTPUT_DIR, DICTIONARY_PATH
+from rapidfuzz import process, fuzz
 
 def main(prev_process: str) -> None:
     SOURCE_DIR = None
@@ -34,35 +33,35 @@ def main(prev_process: str) -> None:
     print("Preview top 20 data")
     print(source_df.head(20))
     
-    print(f"\nStopword removal is starting to process")
-    
-    more_stop_words = []
-    
-    stop_words = StopWordRemoverFactory().get_stop_words()
-    stop_words.extend(more_stop_words)
-    
-    new_array = ArrayDictionary(stop_words)
-    stop_words_remover_new = StopWordRemover(new_array)
-    
-    def stopword(text: str) -> str:
-        return stop_words_remover_new.remove(text)
-    
-    source_df['text'] = source_df["text"].apply(lambda x: stopword(x))
-    
-    
+    print("\nLoad dictionary")
+    dictionary_df = pd.read_csv(DICTIONARY_PATH / "custom-kamus.json")
+
+    # Fungsi koreksi menggunakan RapidFuzz
+    # custom_kamus sekarang adalah dict, contoh: { "gw": "saya", "elo": "kamu", ... }
+
+    # Jangan konversi ke set, biarkan tetap dict
+    # custom_kamus = {"gue": "saya", ...} sudah dari file JSON
+
+    dictionary_dict = dict(zip(dictionary_df['informal'], dictionary_df['formal']))
+
+    def word_correction(word: str):
+        return dictionary_dict.get(key=word, default=word)
+
+    source_df['text'] = source_df['text'].apply(lambda sentence: [word_correction(word) for word in sentence])
+
     print(f"\nPreview result from stopword removal")
     print(source_df.head(20))
 
     
     print("\nConverting result from pandas data frame to CSV file")
     try:
-        output_file_name = STOPWORD_OUTPUT_DIR / f"stopword_removal_{TIMESTAMP}.csv"
+        output_file_name = WORD_REPAIR_OUTPUT_DIR / f"word_repair_{TIMESTAMP}.csv"
         source_df.to_csv(output_file_name, index=False)
-        print(f"Stopword removal CSV file successfully exported as {output_file_name}")
+        print(f"Word repair CSV file successfully exported as {output_file_name}")
     except Exception as e:
         print("An error occurred while saving the CSV file:", e)
     
-    print("Stopword removal process is done!")
+    print("Word repair process is done!")
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main(prev_process="Data cleaning")
