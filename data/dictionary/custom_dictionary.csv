@@ -20,6 +20,7 @@ mo,mau
 mw,mau
 bs,bisa
 bsa,bisa
+bsok,besok
 hrs,harus
 msti,harus
 jd,jadi
@@ -47,6 +48,7 @@ karna,karena
 klo,kalau
 kalo,kalau
 sblm,sebelum
+sbln,sebulan
 stlh,setelah
 dg,dengan
 dgn,dengan
@@ -62,6 +64,7 @@ kpd,kepada
 yg,yang
 yng,yang
 aj,saja
+aje,saja
 aja,saja
 doang,saja
 kok,kok
@@ -81,10 +84,12 @@ ga,tidak
 gak,tidak
 g,tidak
 nggak,tidak
+nggk,tidak
 ngga,tidak
 enggak,tidak
 gk,tidak
 tdk,tidak
+tdnya,tadinya
 nyari,mencari
 cari,cari
 liat,lihat
@@ -150,6 +155,7 @@ ksih,kasih
 dblg,dibalik
 diksh,dikasih
 dbyr,dibayar
+byk,banyak
 dbeli,dibeli
 djual,dijual
 dkirim,dikirim
@@ -157,12 +163,14 @@ hp,handphone
 laptop,laptop
 tv,televisi
 ac,AC
+lagialhamdulillah,lagi alhamdulillah
 aq,saya
 aku,saya
 sya,saya
 q,saya
 sdh,sudah
 habis,sudah
+habiss,habis
 blom,belum
 belom,belum
 mau,mau
@@ -234,7 +242,7 @@ bner,benar
 ortu,orang tua
 kaka,kakak
 kwh,kWh
-va,VA
+va,Volt Ampere
 mantaptoken,mantap token
 mahal,mahal
 mhal,mahal
@@ -355,6 +363,7 @@ tapi,tapi
 atau,atau
 ato,atau
 dan,dan
+danpaknya,dampaknya
 n,dan
 yang,yang
 ini,ini
@@ -409,6 +418,7 @@ kompor,kompor
 mejikom,magic com
 daya,daya
 watt,watt
+wat,watt
 meteran,meteran
 subsidi,subsidi
 bantuan,bantuan
@@ -497,6 +507,7 @@ sedikit,sedikit
 dikit,sedikit
 double,ganda
 lipat,lipat
+lipar,lipat
 2x,dua kali
 3x,tiga kali
 kali,kali
@@ -649,3 +660,21 @@ harusnya,harus
 boleh,boleh
 bolehkah,boleh
 bolehlah,boleh
+kurang2,kurang-kurang
+kurang,kurang
+hbispdhl,habis padahal
+2minggu,dua minggu
+bhkn,bahkan
+discond,diskon
+200ribu,dua ratus ribu
+200rb,dua ratus ribu
+100rb,seratus ribu
+300rb,tiga ratus ribu
+750rb,tujuh ratus lima puluh ribu
+hbis,habis
+btw,ngomong-ngomong
+keskrg,ke sekarang
+480k,empat ratus delapan puluh ribu
+350370,tiga ratus lima puluh ribu tiga ratus tujuh puluh
+coment,komentar
+asyiikkk,asik
