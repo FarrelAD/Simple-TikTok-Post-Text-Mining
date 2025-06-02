@@ -73,7 +73,7 @@ def preprocessing_data() -> None:
 def vectorization() -> None:
     print("Vectorization is running!")
     
-    tf_idf()
+    tf_idf(last_process_of_preprocessing=last_process_of_preprocessing)
 
 def sentiment_analysis() -> None:
     print("Sentiment analysis is running!")

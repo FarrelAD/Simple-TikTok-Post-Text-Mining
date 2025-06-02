@@ -3,12 +3,14 @@ from pathlib import Path
 from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
 import questionary
 
-from constants import TIMESTAMP, STEMMING_OUTPUT_DIR, STOPWORD_OUTPUT_DIR, DATA_CLEANING_OUTPUT_DIR, CASE_FOLDING_OUTPUT_DIR, WORD_REPAIR_OUTPUT_DIR, TOKENIZATION_OUTPUT_DIR
+from constants import TIMESTAMP, DATASET_FILE_PATH, STEMMING_OUTPUT_DIR, STOPWORD_OUTPUT_DIR, DATA_CLEANING_OUTPUT_DIR, CASE_FOLDING_OUTPUT_DIR, WORD_REPAIR_OUTPUT_DIR, TOKENIZATION_OUTPUT_DIR
 
 factory = StemmerFactory()
 stemmer = factory.create_stemmer()
 
-def main(prev_process: str):
+def main(prev_process: str = None):
+    print("\nStemming is starting")
+    
     SOURCE_DIR = None
     
     if prev_process == "Data cleaning":
@@ -24,15 +26,19 @@ def main(prev_process: str):
     elif prev_process == "Stemming":
         SOURCE_DIR = STEMMING_OUTPUT_DIR
     else:
-        SOURCE_DIR = None
+        SOURCE_DIR = DATASET_FILE_PATH
+    
+    if SOURCE_DIR != DATASET_FILE_PATH:
+        sources_files = [str(f) for f in Path(SOURCE_DIR).iterdir() if f.is_file()]
         
-    sources_files = [str(f) for f in Path(SOURCE_DIR).iterdir() if f.is_file()]
+        selected_file: str = questionary.select(f"Select {prev_process} file", choices=sources_files).ask()
+        
+        print(f"Selected file: {selected_file}")
+        source_df = pd.read_csv(SOURCE_DIR / selected_file)
+    else:
+        selected_file = DATASET_FILE_PATH
+        source_df = pd.read_csv(selected_file)
     
-    selected_file: str = questionary.select(f"Select {prev_process} file", choices=sources_files).ask()
-    
-    print(f"Selected file: {selected_file}")
-    
-    source_df = pd.read_csv(SOURCE_DIR / selected_file)
     
     print("\nPreview top 20 stemming data")
     print(source_df.head(20))
