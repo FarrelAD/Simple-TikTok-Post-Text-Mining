@@ -19,6 +19,8 @@ def main(prev_process: str) -> None:
         SOURCE_DIR = TOKENIZATION_OUTPUT_DIR
     elif prev_process == "Stemming":
         SOURCE_DIR = STEMMING_OUTPUT_DIR
+    else:
+        SOURCE_DIR = DATASET_FILE_PATH
         
     source_files = [str(f) for f in Path(SOURCE_DIR).iterdir() if f.is_file()]
     
@@ -31,7 +33,7 @@ def main(prev_process: str) -> None:
     print("\nPreview top 20 tokenization data")
     print(source_df.head(20))
     
-    print("\Tokenization is start to process")
+    print("\nTokenization is start to process")
     source_df['text'] = source_df['text'].apply(lambda x: x.split())
         
     print("\nPreview result from tokenization")
@@ -39,9 +41,9 @@ def main(prev_process: str) -> None:
     
     print("\nConverting result from pandas data frame to CSV file")
     try:
-        output_file_name = TOKENIZATION_OUTPUT_DIR / f"data_cleaning_{TIMESTAMP}.csv"
+        output_file_name = TOKENIZATION_OUTPUT_DIR / f"tokenization_{TIMESTAMP}.csv"
         source_df.to_csv(output_file_name, index=False)
-        print(f"Data cleaning CSV file successfully exported as {output_file_name}")
+        print(f"Tokenization CSV file successfully exported as {output_file_name}")
     except Exception as e:
         print("An error occurred while saving the CSV file:", e)
     

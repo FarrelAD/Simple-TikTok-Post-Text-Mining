@@ -11,8 +11,15 @@ from stemming import main as stemming
 from word_repair_2 import main as word_repair
 from tokenization import main as tokenization
 
+from tf_idf import main as tf_idf
+
+
+last_process_of_preprocessing = None
+
 
 def preprocessing_data() -> None:
+    global last_process_of_preprocessing
+    
     print("Preprocessing data is running!")
     
     preprocessing_steps = ["Data cleaning", "Stemming", "Stopword removal", "Case folding", "Word repair", "Tokenizing"]
@@ -58,11 +65,15 @@ def preprocessing_data() -> None:
         
         prev_step = step
     
+    last_process_of_preprocessing = prev_step
+    
     print("=== PREPROCESSING IS DONE ===")
 
 
 def vectorization() -> None:
     print("Vectorization is running!")
+    
+    tf_idf()
 
 def sentiment_analysis() -> None:
     print("Sentiment analysis is running!")
